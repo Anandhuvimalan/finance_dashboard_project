@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block page_title %}Revenue Recognition{% endblock %}
+{% block page_subtitle %}Track recognized vs deferred revenues{% endblock %}
+
+{% block content %}
+<div class="card-container">
+    <div class="card">
+        <h3>Total Gross Amount</h3>
+        <p id="rrTotalGross">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Total Recognized</h3>
+        <p id="rrTotalRecognized">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Total Deferred</h3>
+        <p id="rrTotalDeferred">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Total Transactions</h3>
+        <p id="rrTotalTransactions">Loading...</p>
+    </div>
+</div>
+
+<h2>Revenue Recognition Trend</h2>
+<div class="chart-box"><canvas id="revenueRecognitionChart"></canvas></div>
+
+<h2>Revenue Recognition Records</h2>
+<div class="table-wrap">
+    <table id="revenueRecognitionTable">
+        <thead>
+            <tr>
+                <th>Booking Date</th>
+                <th>Service Date</th>
+                <th>Flight Number</th>
+                <th>Route</th>
+                <th>Gross Amount</th>
+                <th>Recognized</th>
+                <th>Deferred</th>
+                <th>Recognition Method</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+{% endblock %}

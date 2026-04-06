@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block page_title %}General Ledger{% endblock %}
+{% block page_subtitle %}Complete journal entries and balances{% endblock %}
+
+{% block content %}
+<div class="card-container">
+    <div class="card">
+        <h3>Total Debit</h3>
+        <p id="glTotalDebit">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Total Credit</h3>
+        <p id="glTotalCredit">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Total Entries</h3>
+        <p id="glTotalEntries">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Net Balance</h3>
+        <p id="glNetBalance">Loading...</p>
+    </div>
+</div>
+
+<h2>General Ledger Debit vs Credit</h2>
+<div class="chart-box"><canvas id="generalLedgerChart"></canvas></div>
+
+<h2>General Ledger Records</h2>
+<div class="table-wrap">
+<table id="generalLedgerTable">
+    <thead>
+        <tr>
+            <th>Entry Date</th>
+            <th>Posting Date</th>
+            <th>Account Code</th>
+            <th>Account Name</th>
+            <th>Debit</th>
+            <th>Credit</th>
+            <th>Reconciled</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+</div>
+{% endblock %}

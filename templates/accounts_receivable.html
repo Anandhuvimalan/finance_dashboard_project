@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block page_title %}Accounts Receivable{% endblock %}
+{% block page_subtitle %}Track customer invoices and collections{% endblock %}
+
+{% block content %}
+<div class="card-container">
+    <div class="card">
+        <h3>Total Outstanding</h3>
+        <p id="arTotalOutstanding">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Total Received</h3>
+        <p id="arTotalReceived">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Overdue Invoices</h3>
+        <p id="arOverdueCount">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Total Invoices</h3>
+        <p id="arTotalInvoices">Loading...</p>
+    </div>
+</div>
+
+<h2>Accounts Receivable Invoices</h2>
+<div class="table-wrap">
+<table id="arTable">
+    <thead>
+        <tr>
+            <th>Customer</th>
+            <th>Invoice #</th>
+            <th>Amount</th>
+            <th>Received</th>
+            <th>Balance</th>
+            <th>Due Date</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+</div>
+{% endblock %}

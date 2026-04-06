@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block page_title %}Operating Cost{% endblock %}
+{% block page_subtitle %}Monitor daily operating expenses{% endblock %}
+
+{% block content %}
+<div class="card-container">
+    <div class="card">
+        <h3>Total Operating Cost</h3>
+        <p id="ocTotalCost">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Average Daily Cost</h3>
+        <p id="ocAvgCost">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Highest Cost Day</h3>
+        <p id="ocHighestCostDay">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Average CASM</h3>
+        <p id="ocAvgCasm">Loading...</p>
+    </div>
+</div>
+
+<h2>Operating Cost Trend</h2>
+<div class="chart-box"><canvas id="operatingCostPageChart"></canvas></div>
+
+<h2>Operating Cost Records</h2>
+<div class="table-wrap">
+<table id="operatingCostPageTable">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Fuel & Oil</th>
+            <th>Flight Crew Salaries</th>
+            <th>Ground Staff Salaries</th>
+            <th>Maintenance</th>
+            <th>Airport Fees</th>
+            <th>Total Operating Cost</th>
+            <th>CASM</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+</div>
+{% endblock %}

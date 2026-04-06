@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyFinance Dashboard</title>
+    <meta name="description" content="Airline financial management dashboard with revenue, expenses, accounts, and P&L tracking">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-logo">✈</div>
+                <div>
+                    <h2>SkyFinance</h2>
+                    <p>Airline Financial Hub</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section-title">Overview</div>
+                <a href="/" class="nav-link" id="nav-dashboard">📊 Dashboard</a>
+
+                <div class="nav-section-title">Revenue & Costs</div>
+                <a href="/daily-revenue" class="nav-link" id="nav-revenue">💰 Daily Revenue</a>
+                <a href="/operating-cost" class="nav-link" id="nav-operating">⚙️ Operating Costs</a>
+                <a href="/daily-expense" class="nav-link" id="nav-expense">📋 Daily Expenses</a>
+
+                <div class="nav-section-title">Accounts</div>
+                <a href="/ap" class="nav-link" id="nav-ap">📤 Accounts Payable</a>
+                <a href="/ar" class="nav-link" id="nav-ar">📥 Accounts Receivable</a>
+
+                <div class="nav-section-title">Ledger & Statements</div>
+                <a href="/gl" class="nav-link" id="nav-gl">📒 General Ledger</a>
+                <a href="/chart-of-accounts" class="nav-link" id="nav-coa">🗂️ Chart of Accounts</a>
+                <a href="/pl" class="nav-link" id="nav-pl">📈 Profit & Loss</a>
+                <a href="/revenue-recognition" class="nav-link" id="nav-rr">🧾 Revenue Recognition</a>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-wrapper">
+            <header class="topbar">
+                <div>
+                    <h1 class="topbar-title">{% block page_title %}Finance Dashboard{% endblock %}</h1>
+                    <p class="topbar-subtitle">{% block page_subtitle %}Interactive financial analytics{% endblock %}</p>
+                </div>
+
+                <div class="topbar-actions">
+                    <select id="filterYear" class="topbar-select">
+                        <option value="">All Years</option>
+                        <option value="2026" selected>2026</option>
+                    </select>
+                    <select id="filterMonth" class="topbar-select">
+                        <option value="">All Months</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                    </select>
+                    <button class="topbar-btn btn-primary" type="button" onclick="showAddModal()">+ Add Data</button>
+                </div>
+            </header>
+
+            <main class="page-container">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <!-- ADD DATA MODAL -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Record</h2>
+                <span class="close-btn" onclick="hideAddModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="addForm">
+                    <!-- Form fields injected dynamically by JS -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="topbar-btn" onclick="hideAddModal()">Cancel</button>
+                <button type="button" class="topbar-btn btn-primary" onclick="submitNewData()">Save Record</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+
+    <!-- Highlight active nav link -->
+    <script>
+        (function() {
+            const path = window.location.pathname;
+            const links = document.querySelectorAll('.nav-link');
+            links.forEach(link => {
+                if (link.getAttribute('href') === path) {
+                    link.classList.add('active');
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

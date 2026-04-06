@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block page_title %}Profit &amp; Loss{% endblock %}
+{% block page_subtitle %}Income statement and performance{% endblock %}
+
+{% block content %}
+<div class="card-container">
+    <div class="card">
+        <h3>Total Revenue</h3>
+        <p id="plTotalRevenue">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Total Expenses</h3>
+        <p id="plTotalExpenses">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Total Net Income</h3>
+        <p id="plTotalNetIncome">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Total Periods</h3>
+        <p id="plTotalPeriods">Loading...</p>
+    </div>
+</div>
+
+<h2>Profit &amp; Loss Trend</h2>
+<div class="chart-box"><canvas id="profitLossChart"></canvas></div>
+
+<h2>Profit &amp; Loss Records</h2>
+<div class="table-wrap">
+<table id="profitLossTable">
+    <thead>
+        <tr>
+            <th>Period</th>
+            <th>Period Start</th>
+            <th>Period End</th>
+            <th>Total Revenue</th>
+            <th>Total Expenses</th>
+            <th>Operating Income</th>
+            <th>Pre-Tax Income</th>
+            <th>Net Income</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+</div>
+{% endblock %}

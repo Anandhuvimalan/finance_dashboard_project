@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block page_title %}Chart of Accounts{% endblock %}
+{% block page_subtitle %}Account structure and classifications{% endblock %}
+
+{% block content %}
+<div class="card-container">
+    <div class="card">
+        <h3>Total Accounts</h3>
+        <p id="caTotalAccounts">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Active Accounts</h3>
+        <p id="caActiveAccounts">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Header Accounts</h3>
+        <p id="caHeaderAccounts">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Unique Account Types</h3>
+        <p id="caUniqueAccountTypes">Loading...</p>
+    </div>
+</div>
+
+<h2>Accounts by Type</h2>
+<div class="chart-box"><canvas id="chartOfAccountsPageChart"></canvas></div>
+
+<h2>Chart of Accounts Records</h2>
+<div class="table-wrap">
+<table id="chartOfAccountsPageTable">
+    <thead>
+        <tr>
+            <th>Account Code</th>
+            <th>Account Name</th>
+            <th>Account Type</th>
+            <th>Sub Type</th>
+            <th>Parent Code</th>
+            <th>Normal Balance</th>
+            <th>Active</th>
+            <th>Header</th>
+            <th>Currency</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+</div>
+{% endblock %}
