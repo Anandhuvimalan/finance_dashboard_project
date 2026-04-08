@@ -1,0 +1,329 @@
+{% macro render_cards(items) -%}
+{% if items %}
+<div class="card-container">
+    {% for card in items %}
+    <div class="card">
+        <h3>{{ card.title }}</h3>
+        <p>{{ card.value }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{%- endmacro %}
+
+{% macro render_charts(items) -%}
+{% if items %}
+    {% for chart in items %}
+    <h2>{{ chart.title }}</h2>
+    <div class="chart-box">{{ chart.html | safe }}</div>
+    {% endfor %}
+{% endif %}
+{%- endmacro %}
+
+{% macro render_table(table) -%}
+{% if table %}
+<h2>{{ table.title }}</h2>
+<div class="table-wrap">
+    {% if table.rows %}
+    <table>
+        <thead>
+            <tr>
+                {% for header in table.headers %}
+                <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in table.rows %}
+            <tr>
+                {% for value in row %}
+                <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">No records for the selected filters.</div>
+    {% endif %}
+</div>
+{% endif %}
+{%- endmacro %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title | default("Finance Dashboard") }} | SkyFinance</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+</head>
+<body>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-logo">&#9992;</div>
+                <div>
+                    <h2>SkyFinance</h2>
+                    <p>Airline Financial Hub</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section-title">Overview</div>
+                <a href="/" class="nav-link {% if request.url.path == '/' %}active{% endif %}">&#128202; Dashboard</a>
+
+                <div class="nav-section-title">Revenue & Costs</div>
+                <a href="/daily-revenue" class="nav-link {% if 'daily-revenue' in request.url.path %}active{% endif %}">&#128176; Daily Revenue</a>
+                <a href="/operating-cost" class="nav-link {% if 'operating-cost' in request.url.path %}active{% endif %}">&#9881;&#65039; Operating Costs</a>
+                <a href="/daily-expense" class="nav-link {% if 'daily-expense' in request.url.path %}active{% endif %}">&#128203; Daily Expenses</a>
+
+                <div class="nav-section-title">Accounts</div>
+                <a href="/ap" class="nav-link {% if request.url.path == '/ap' %}active{% endif %}">&#128228; Accounts Payable</a>
+                <a href="/ar" class="nav-link {% if request.url.path == '/ar' %}active{% endif %}">&#128229; Accounts Receivable</a>
+
+                <div class="nav-section-title">Ledger & Statements</div>
+                <a href="/gl" class="nav-link {% if request.url.path == '/gl' %}active{% endif %}">&#128210; General Ledger</a>
+                <a href="/chart-of-accounts" class="nav-link {% if 'chart-of-accounts' in request.url.path %}active{% endif %}">&#128450;&#65039; Chart of Accounts</a>
+                <a href="/pl" class="nav-link {% if request.url.path == '/pl' %}active{% endif %}">&#128200; Profit &amp; Loss</a>
+                <a href="/revenue-recognition" class="nav-link {% if 'revenue-recognition' in request.url.path %}active{% endif %}">&#129534; Revenue Recognition</a>
+            </nav>
+        </aside>
+
+        <div class="main-wrapper">
+            <header class="topbar">
+                <div>
+                    <h1 class="topbar-title">{{ page_title | default("Finance Dashboard") }}</h1>
+                    <p class="topbar-subtitle">{{ page_subtitle | default("Overview of all financial metrics") }}</p>
+                </div>
+                <div class="topbar-actions">
+                    <select id="filterYear" class="topbar-select" onchange="applyFilters('year')">
+                        <option value="">All Years</option>
+                        {% for y in years %}
+                        <option value="{{ y }}" {% if y == sel_year %}selected{% endif %}>{{ y }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="filterMonth" class="topbar-select" onchange="applyFilters('month')">
+                        <option value="">All Months</option>
+                        {% for m in months %}
+                        <option value="{{ m }}" {% if m == sel_month %}selected{% endif %}>{{ month_names[m] }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="button" class="topbar-btn btn-primary" onclick="showAddModal()">Add Data</button>
+                </div>
+            </header>
+
+            <main class="page-container">
+                {{ render_cards(cards) }}
+                {{ render_charts(charts) }}
+                {{ render_table(table) }}
+
+                {% if extra_cards or extra_charts %}
+                <div class="section-label">Daily Expense Summary</div>
+                {{ render_cards(extra_cards) }}
+                {{ render_charts(extra_charts) }}
+                {% endif %}
+
+                {% if coa_cards or coa_chart %}
+                <div class="section-label">Chart of Accounts Summary</div>
+                {{ render_cards(coa_cards) }}
+                {% if coa_chart %}
+                <h2>{{ coa_chart.title }}</h2>
+                <div class="chart-box">{{ coa_chart.html | safe }}</div>
+                {% endif %}
+                {% endif %}
+            </main>
+        </div>
+    </div>
+
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Record</h2>
+                <span class="close-btn" onclick="hideAddModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="datasetWrap" class="form-group" style="display:none;">
+                    <label for="datasetSelect">Dataset</label>
+                    <select id="datasetSelect"></select>
+                </div>
+                <form id="addForm"></form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="topbar-btn" onclick="hideAddModal()">Cancel</button>
+                <button type="button" class="topbar-btn btn-primary" onclick="submitNewData()">Save Record</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const FORM_CONFIGS = {{ form_configs | safe }};
+
+    function currentFormKey() {
+        const path = window.location.pathname;
+        if (path === '/') {
+            const select = document.getElementById('datasetSelect');
+            return select && select.value ? select.value : 'daily-revenue';
+        }
+        return path.replace(/^\//, '');
+    }
+
+    function applyFilters(changed) {
+        var yearSelect = document.getElementById('filterYear');
+        var monthSelect = document.getElementById('filterMonth');
+        var year = yearSelect.value;
+        var month = monthSelect.value;
+        if (changed === 'year') {
+            month = '';
+            monthSelect.value = '';
+        }
+        var params = new URLSearchParams();
+        if (year) params.set('year', year);
+        if (month) params.set('month', month);
+        var qs = params.toString();
+        window.location.href = window.location.pathname + (qs ? '?' + qs : '');
+    }
+
+    function option(label, value) {
+        const item = document.createElement('option');
+        item.value = value;
+        item.textContent = label;
+        return item;
+    }
+
+    function buildField(field) {
+        const group = document.createElement('div');
+        group.className = 'form-group';
+
+        const label = document.createElement('label');
+        label.htmlFor = 'field_' + field.name;
+        label.textContent = field.label;
+        group.appendChild(label);
+
+        let input;
+        if (field.type === 'boolean') {
+            input = document.createElement('select');
+            input.appendChild(option('No', 'false'));
+            input.appendChild(option('Yes', 'true'));
+        } else {
+            input = document.createElement('input');
+            input.type = field.type === 'number' ? 'number' : field.type;
+            if (field.type === 'number') {
+                input.step = 'any';
+            }
+        }
+
+        input.id = 'field_' + field.name;
+        input.name = field.name;
+        if (field.required) {
+            input.required = true;
+        }
+        group.appendChild(input);
+        return group;
+    }
+
+    function populateDatasetSelect() {
+        const select = document.getElementById('datasetSelect');
+        if (select.dataset.ready === 'true') {
+            return;
+        }
+        const labels = {
+            'daily-revenue': 'Daily Revenue',
+            'operating-cost': 'Operating Cost',
+            'daily-expense': 'Daily Expense',
+            'ap': 'Accounts Payable',
+            'ar': 'Accounts Receivable',
+            'gl': 'General Ledger',
+            'chart-of-accounts': 'Chart of Accounts',
+            'pl': 'Profit & Loss',
+            'revenue-recognition': 'Revenue Recognition'
+        };
+
+        Object.keys(FORM_CONFIGS).forEach(function(key) {
+            select.appendChild(option(labels[key] || key, key));
+        });
+        select.value = 'daily-revenue';
+        select.dataset.ready = 'true';
+        select.addEventListener('change', function() {
+            renderForm(select.value);
+        });
+    }
+
+    function renderForm(formKey) {
+        const config = FORM_CONFIGS[formKey];
+        const form = document.getElementById('addForm');
+        const title = document.getElementById('modalTitle');
+        form.innerHTML = '';
+        title.textContent = config.title;
+        config.fields.forEach(function(field) {
+            form.appendChild(buildField(field));
+        });
+    }
+
+    function showAddModal() {
+        const modal = document.getElementById('addModal');
+        const datasetWrap = document.getElementById('datasetWrap');
+        const isDashboard = window.location.pathname === '/';
+
+        if (isDashboard) {
+            datasetWrap.style.display = 'block';
+            populateDatasetSelect();
+            renderForm(document.getElementById('datasetSelect').value);
+        } else {
+            datasetWrap.style.display = 'none';
+            renderForm(currentFormKey());
+        }
+
+        modal.style.display = 'block';
+    }
+
+    function hideAddModal() {
+        document.getElementById('addModal').style.display = 'none';
+    }
+
+    async function submitNewData() {
+        const formKey = currentFormKey();
+        const config = FORM_CONFIGS[formKey];
+        const payload = { form_key: formKey };
+
+        for (const field of config.fields) {
+            const element = document.getElementById('field_' + field.name);
+            const value = element.value;
+            if (field.required && !value) {
+                alert(field.label + ' is required.');
+                element.focus();
+                return;
+            }
+            if (value !== '') {
+                payload[field.name] = value;
+            }
+        }
+
+        const response = await fetch('/add-record', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            alert(error.detail || 'Failed to save record.');
+            return;
+        }
+
+        hideAddModal();
+        window.location.reload();
+    }
+
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('addModal');
+        if (event.target === modal) {
+            hideAddModal();
+        }
+    });
+    </script>
+</body>
+</html>

@@ -118,6 +118,7 @@ body {
     min-width: 0;
     background: #0a0a0a;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .topbar {
@@ -263,12 +264,25 @@ h2 {
     padding: 16px;
     margin-bottom: 20px;
     position: relative;
-    height: 320px;
+    min-height: 380px;
+    overflow: hidden;
 }
 
 .chart-box canvas {
     width: 100% !important;
     height: 100% !important;
+}
+
+.chart-box .js-plotly-plot,
+.chart-box .plotly,
+.chart-box .plot-container,
+.chart-box .svg-container,
+.chart-box .main-svg {
+    width: 100% !important;
+}
+
+.chart-box .js-plotly-plot {
+    height: 340px !important;
 }
 
 canvas {
@@ -281,6 +295,8 @@ canvas {
     border-radius: 12px;
     border: 1px solid #1e1e1e;
     margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
 }
 
 table {
@@ -320,6 +336,20 @@ tr:hover td {
     background: #161616;
 }
 
+.section-label {
+    margin: 28px 0 14px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.empty-state {
+    padding: 22px 18px;
+    color: #777777;
+    background: #111111;
+    font-size: 13px;
+}
+
 /* RESPONSIVE */
 @media (max-width: 992px) {
     .sidebar {
@@ -346,7 +376,11 @@ tr:hover td {
     }
 
     .chart-box {
-        height: 250px;
+        min-height: 300px;
+    }
+
+    .chart-box .js-plotly-plot {
+        height: 260px !important;
     }
 }
 
